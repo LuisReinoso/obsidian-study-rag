@@ -1,5 +1,9 @@
 # Study RAG — Ask your vault (Obsidian plugin)
 
+<div align="center">
+  <img src="demo.gif" alt="Asking a question in Obsidian, answered from your own notes with citations" width="480" />
+</div>
+
 > **Part of the Study Framework.** The companion to [`study-rag-server`](https://github.com/LuisReinoso/study-rag-server):
 > this plugin lets you ask questions across your whole vault from inside Obsidian and get answers
 > grounded in your own notes, with citations (wikilinks) back to the source.
