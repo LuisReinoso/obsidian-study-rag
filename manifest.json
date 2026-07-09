@@ -1,0 +1,10 @@
+{
+  "id": "obsidian-study-rag",
+  "name": "Study RAG (Ask your vault)",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "Pregunta a través de todo tu vault; respuestas grounded en tus notas con citas, vía un RAG self-hosted de modelos abiertos (study-rag-server). Pieza del Study Framework.",
+  "author": "Luis Reinoso",
+  "authorUrl": "https://luisreinoso.dev",
+  "isDesktopOnly": false
+}

@@ -1,0 +1,22 @@
+{
+  "name": "obsidian-study-rag",
+  "version": "0.1.0",
+  "description": "Obsidian plugin: ask your vault via the self-hosted study-rag-server. Part of the Study Framework.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.2",
+    "obsidian": "^1.5.7",
+    "tslib": "^2.6.2",
+    "tsx": "^4.10.0",
+    "typescript": "^5.4.5"
+  }
+}

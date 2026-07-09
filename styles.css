@@ -1,0 +1,12 @@
+.study-rag-result {
+  margin-top: 0.8em;
+  padding: 0.6em 0.8em;
+  border-radius: 6px;
+  background: var(--background-secondary);
+  max-height: 50vh;
+  overflow-y: auto;
+  white-space: normal;
+}
+.study-rag-result:empty {
+  display: none;
+}
