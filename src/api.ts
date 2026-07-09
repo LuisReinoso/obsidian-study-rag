@@ -1,6 +1,5 @@
-// Lógica pura/testeable del plugin: hablar con study-rag-server y formatear.
-// El HTTP se inyecta (`post`) para poder testear sin red y para usar el
-// requestUrl de Obsidian (evita CORS) en runtime.
+// Pure, testable logic: talk to study-rag-server and format the result. The HTTP call
+// is injected so tests run without network and runtime can use Obsidian's requestUrl.
 
 export interface AskResponse {
   answer: string;
@@ -24,11 +23,10 @@ export async function reindexServer(serverUrl: string, post: HttpPost): Promise<
   return { notes: Number(data?.notes ?? 0), chunks: Number(data?.chunks ?? 0) };
 }
 
-// Respuesta en Markdown, con las citas al final (links a las notas).
 export function formatResult(res: AskResponse): string {
-  if (!res.answer) return "_Sin respuesta del servidor._";
+  if (!res.answer) return "_No answer from the server._";
   const src = res.sources.length
-    ? "\n\n**Fuentes:**\n" + res.sources.map((s) => `- [${s.n}] [[${s.source.replace(/\.md$/, "")}]]`).join("\n")
+    ? "\n\n**Sources:**\n" + res.sources.map((s) => `- [${s.n}] [[${s.source.replace(/\.md$/, "")}]]`).join("\n")
     : "";
   return `${res.answer}${src}`;
 }

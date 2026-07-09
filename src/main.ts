@@ -8,7 +8,7 @@ interface StudyRagSettings {
 }
 const DEFAULT_SETTINGS: StudyRagSettings = { serverUrl: "http://127.0.0.1:8787" };
 
-// HTTP vía Obsidian (evita CORS). Inyectado en la lógica pura de api.ts.
+// requestUrl (not fetch) so the request is not subject to the renderer's CORS policy.
 const post: HttpPost = async (url, body) => {
   const res = await requestUrl({
     url,
@@ -35,10 +35,10 @@ export default class StudyRagPlugin extends Plugin {
 
     this.addCommand({
       id: "ask-your-vault-selection",
-      name: "Ask your vault: usar selección como pregunta",
+      name: "Ask your vault: use selection as the question",
       editorCallback: (editor: Editor) => {
         const q = editor.getSelection().trim();
-        if (!q) return new Notice("Selecciona texto para usarlo como pregunta.");
+        if (!q) return new Notice("Select some text to use as the question.");
         new AskModal(this.app, this, q).open();
       },
     });
@@ -51,12 +51,12 @@ export default class StudyRagPlugin extends Plugin {
   }
 
   async reindex(): Promise<void> {
-    new Notice("Reindexando el vault...");
+    new Notice("Reindexing your vault...");
     try {
       const r = await reindexServer(this.settings.serverUrl, post);
-      new Notice(`Indexado: ${r.notes} notas, ${r.chunks} chunks.`);
+      new Notice(`Indexed: ${r.notes} notes, ${r.chunks} chunks.`);
     } catch (e: any) {
-      new Notice(`Error al reindexar: ${e.message}`);
+      new Notice(`Reindex failed: ${e.message}`);
     }
   }
 
@@ -75,21 +75,21 @@ class AskModal extends Modal {
 
   onOpen() {
     const { contentEl } = this;
-    contentEl.createEl("h3", { text: "Pregunta a tu vault" });
+    contentEl.createEl("h3", { text: "Ask your vault" });
 
     const input = contentEl.createEl("textarea", {
-      attr: { rows: "3", placeholder: "¿Qué dicen mis notas sobre...?", style: "width:100%" },
+      attr: { rows: "3", placeholder: "What do my notes say about...?", style: "width:100%" },
     });
     input.value = this.prefill;
 
     const result = contentEl.createDiv({ cls: "study-rag-result" });
-    const btn = contentEl.createEl("button", { text: "Preguntar", cls: "mod-cta" });
+    const btn = contentEl.createEl("button", { text: "Ask", cls: "mod-cta" });
 
     const run = async () => {
       const q = input.value.trim();
       if (!q) return;
       btn.disabled = true;
-      result.setText("Buscando en tus notas...");
+      result.setText("Searching your notes...");
       try {
         const res = await this.plugin.ask(q);
         result.empty();
@@ -123,8 +123,8 @@ class StudyRagSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName("Servidor RAG")
-      .setDesc("URL de study-rag-server (self-hosted).")
+      .setName("RAG server")
+      .setDesc("URL of study-rag-server (self-hosted).")
       .addText((t) =>
         t
           .setPlaceholder("http://127.0.0.1:8787")
@@ -136,8 +136,8 @@ class StudyRagSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Reindexar vault")
-      .setDesc("Trocea y embebe tus notas en el servidor. Correr tras cambios grandes.")
-      .addButton((b) => b.setButtonText("Reindexar").setCta().onClick(() => this.plugin.reindex()));
+      .setName("Reindex vault")
+      .setDesc("Chunk and embed your notes on the server. Run after large changes.")
+      .addButton((b) => b.setButtonText("Reindex").setCta().onClick(() => this.plugin.reindex()));
   }
 }
